@@ -33,6 +33,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
     private EditText ean;
     private final int LOADER_ID = 1;
+    private final int REQUEST_CODE = 13;
     private View rootView;
     private final String EAN_CONTENT="eanContent";
     private static final String SCAN_FORMAT = "scanFormat";
@@ -104,7 +105,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                     Intent intent = new Intent("com.google.zxing.client.android.SCAN");
                     intent.setPackage("com.google.zxing.client.android");
                     intent.putExtra("SCAN_MODE", "EAN_13_MODE");
-                    startActivityForResult(intent, 0);
+                    startActivityForResult(intent, REQUEST_CODE);
                 } catch (ActivityNotFoundException e) {
                     showMissingScannerDialog();
                 }
@@ -164,7 +165,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
+        if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
