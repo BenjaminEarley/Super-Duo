@@ -117,6 +117,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             @Override
             public void onClick(View view) {
                 ean.setText("");
+                Toast.makeText(getActivity(), "Book Saved", Toast.LENGTH_LONG).show();
             }
         });
 
