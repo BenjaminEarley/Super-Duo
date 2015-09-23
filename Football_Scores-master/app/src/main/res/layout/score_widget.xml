@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#09C"
+    android:padding="@dimen/widget_margin">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/home_name_widget"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="#09C"
+            android:gravity="center"
+            android:text="@string/appwidget_text"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/score_widget"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="#09C"
+            android:gravity="center"
+            android:text="@string/appwidget_text"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/away_name_widget"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="#09C"
+            android:gravity="center"
+            android:text="@string/appwidget_text"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:textStyle="bold|italic" />
+    </LinearLayout>
+
+</RelativeLayout>
