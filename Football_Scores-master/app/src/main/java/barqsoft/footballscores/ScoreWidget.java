@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import barqsoft.footballscores.service.myFetchService;
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -14,9 +16,7 @@ public class ScoreWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        context.startService(new Intent(context, ScoreWidgetIntentService.class));
-
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.score_widget);
+        update_scores(context);
     }
 
 
@@ -50,5 +50,11 @@ public class ScoreWidget extends AppWidgetProvider {
 //        // Instruct the widget manager to update the widget
 //        appWidgetManager.updateAppWidget(appWidgetId, views);
 //    }
+
+    private void update_scores(Context context)
+    {
+        Intent service_start = new Intent(context, myFetchService.class);
+        context.startService(service_start);
+    }
 }
 

@@ -1,6 +1,7 @@
 package barqsoft.footballscores.service;
 
 import android.app.IntentService;
+import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import java.util.Vector;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.ScoreWidgetIntentService;
 
 /**
  * Created by yehya khaled on 3/2/2015.
@@ -266,6 +268,8 @@ public class myFetchService extends IntentService
                     DatabaseContract.BASE_CONTENT_URI,insert_data);
 
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
+
+            this.startService(new Intent(this, ScoreWidgetIntentService.class));
         }
         catch (JSONException e)
         {
