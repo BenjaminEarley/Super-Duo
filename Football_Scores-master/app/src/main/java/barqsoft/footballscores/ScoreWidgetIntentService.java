@@ -1,6 +1,7 @@
 package barqsoft.footballscores;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -10,6 +11,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.widget.RemoteViews;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -24,7 +27,8 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
             DatabaseContract.scores_table.AWAY_COL,
             DatabaseContract.scores_table.HOME_GOALS_COL,
             DatabaseContract.scores_table.AWAY_GOALS_COL,
-            DatabaseContract.scores_table.TIME_COL
+            DatabaseContract.scores_table.TIME_COL,
+            DatabaseContract.scores_table.MATCH_ID
     };
     // these indices must match the projection
     private static final int ID = 0;
@@ -33,9 +37,13 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
     private static final int INDEX_HOME_GOALS_COL = 3;
     private static final int INDEX_AWAY_GOALS_COL = 4;
     private static final int INDEX_TIME_COL = 5;
+    private static final int INDEX_MATCH_ID_COL = 6;
 
     private CursorLoader mCursorLoader;
     public static final int SCORES_LOADER = 0;
+
+    private AppWidgetManager appWidgetManager;
+    private int[] appWidgetIds;
 
     private String[] argumentDate = new String[1];
 
@@ -46,8 +54,8 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
+        appWidgetManager = AppWidgetManager.getInstance(this);
+        appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 ScoreWidget.class));
 
         update_scores();
@@ -79,6 +87,23 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
         String homeGoals = data.getString(INDEX_HOME_GOALS_COL);
         String awayGoals = data.getString(INDEX_AWAY_GOALS_COL);
         int time = data.getInt(INDEX_TIME_COL);
+        int selected_match_id = data.getInt(INDEX_MATCH_ID_COL);
+
+        RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.score_widget);
+
+        views.setTextViewText(R.id.home_name_widget, homeName);
+
+        views.setTextViewText(R.id.score_widget, homeGoals + " - " + awayGoals);
+
+        views.setTextViewText(R.id.away_name_widget, awayName);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+
+        for(int id : appWidgetIds) {
+            appWidgetManager.updateAppWidget(id, views);
+        }
     }
 
     private void update_scores()
@@ -87,16 +112,4 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
         this.startService(service_start);
     }
 
-    /**
-     * Showing a toast message, using the Main thread
-     */
-    private void showToast(final Context context, final String message) {
-        Handler mainThread = new Handler(Looper.getMainLooper());
-        mainThread.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 }

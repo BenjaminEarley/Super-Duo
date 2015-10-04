@@ -15,12 +15,14 @@ public class ScoreWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         context.startService(new Intent(context, ScoreWidgetIntentService.class));
+
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.score_widget);
     }
 
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+
     }
 
     @Override
