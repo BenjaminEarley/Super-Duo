@@ -62,7 +62,7 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
         argumentDate[0] = mformat.format(date);
 
         mCursorLoader = new CursorLoader(this,DatabaseContract.scores_table.buildScoreWithDate(),
-                SCORES_COLUMNS, null, argumentDate, DatabaseContract.scores_table.TIME_COL + " ASC");
+                SCORES_COLUMNS, null, argumentDate, DatabaseContract.scores_table.TIME_COL + " DESC");
         mCursorLoader.registerListener(SCORES_LOADER, this);
         mCursorLoader.startLoading();
 
@@ -70,38 +70,52 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
 
     @Override
     public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
-        if (data == null) {
-            return;
-        }
-        if (!data.moveToFirst()) {
-            data.close();
-            return;
-        }
-
-        String homeName = data.getString(INDEX_HOME_COL);
-        String awayName = data.getString(INDEX_AWAY_COL);
-        String homeGoals = data.getString(INDEX_HOME_GOALS_COL);
-        String awayGoals = data.getString(INDEX_AWAY_GOALS_COL);
-        int time = data.getInt(INDEX_TIME_COL);
 
         RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.score_widget);
 
-        views.setTextViewText(R.id.home_name_widget, homeName);
+        if (data == null) {
+            views.setTextViewText(R.id.home_name_widget, "No Recent Games");
+            updateWidget(views);
+            return;
+        }
 
-        views.setTextViewText(R.id.score_widget, homeGoals + " - " + awayGoals);
+        views.setTextViewText(R.id.home_name_widget, "No Recent Games");
 
-        views.setTextViewText(R.id.away_name_widget, awayName);
+        while (data.moveToNext()) {
+
+            String homeName = data.getString(INDEX_HOME_COL);
+            String awayName = data.getString(INDEX_AWAY_COL);
+            String homeGoals = data.getString(INDEX_HOME_GOALS_COL);
+            String awayGoals = data.getString(INDEX_AWAY_GOALS_COL);
+
+            if (homeGoals != null) {
+                views.setTextViewText(R.id.home_name_widget, homeName);
+
+                views.setTextViewText(R.id.score_widget, homeGoals + " - " + awayGoals);
+
+                views.setTextViewText(R.id.away_name_widget, awayName);
+
+                break;
+            }
+        }
+
+
 
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
-        for(int id : appWidgetIds) {
-            appWidgetManager.updateAppWidget(id, views);
-        }
+        updateWidget(views);
 
         data.close();
     }
+
+    public void updateWidget(RemoteViews views) {
+        for(int id : appWidgetIds) {
+            appWidgetManager.updateAppWidget(id, views);
+        }
+    }
+
 
 
 }
