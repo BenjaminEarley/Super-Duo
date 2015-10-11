@@ -72,12 +72,12 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
         RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.score_widget);
 
         if (data == null) {
-            views.setTextViewText(R.id.home_name_widget, "No Recent Games");
+            views.setTextViewText(R.id.home_name_widget, "No Games Today");
             updateWidget(views);
             return;
         }
 
-        views.setTextViewText(R.id.home_name_widget, "No Recent Games");
+        views.setTextViewText(R.id.home_name_widget, "No Games Today");
 
         while (data.moveToNext()) {
 
