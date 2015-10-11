@@ -26,8 +26,7 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
             DatabaseContract.scores_table.HOME_COL,
             DatabaseContract.scores_table.AWAY_COL,
             DatabaseContract.scores_table.HOME_GOALS_COL,
-            DatabaseContract.scores_table.AWAY_GOALS_COL,
-            DatabaseContract.scores_table.TIME_COL
+            DatabaseContract.scores_table.AWAY_GOALS_COL
     };
     // these indices must match the projection
     private static final int ID = 0;
@@ -35,7 +34,6 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
     private static final int INDEX_AWAY_COL = 2;
     private static final int INDEX_HOME_GOALS_COL = 3;
     private static final int INDEX_AWAY_GOALS_COL = 4;
-    private static final int INDEX_TIME_COL = 5;
 
     private CursorLoader mCursorLoader;
     public static final int SCORES_LOADER = 0;
@@ -88,7 +86,7 @@ public class ScoreWidgetIntentService extends IntentService implements Loader.On
             String homeGoals = data.getString(INDEX_HOME_GOALS_COL);
             String awayGoals = data.getString(INDEX_AWAY_GOALS_COL);
 
-            if (homeGoals != null) {
+            if (!homeGoals.equals(Integer.toString(-1))) {
                 views.setTextViewText(R.id.home_name_widget, homeName);
 
                 views.setTextViewText(R.id.score_widget, homeGoals + " - " + awayGoals);
